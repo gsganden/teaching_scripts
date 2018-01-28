@@ -9,11 +9,10 @@ file to the same directory.
 Cleans Jupyter notebooks for sharing with students:
 
 - Clears outputs of all cells.
-- For every cells that contain a line that starts with # and contains
-the word "scrub," deletes the content of that cell from that line
-onward. The idea is that you will develop a notebook that contains
-e.g. solution code that you don't want to share with students, putting
-the comment "# scrub" above any lines that you don't want to share.
+- Clears contents of any cell that contains "/scrub/" from the line that
+contains it onwards. The idea is that you will mark cell contents that
+you don't want to share with students (e.g. solution code) with the
+comment "# /scrub/".
 - Updates relative paths to assets. For instance, I put the instructor
 version of the notebook in an `instructor_notes` directory, the student
 version in the parent directory, and e.g. images that are embedded into
@@ -61,7 +60,7 @@ def _update_asset_paths(cell):
 def _get_scrub_comment_line_num(cell):
     scrub_line_num = None
     for line_num, line in enumerate(cell['source']):
-        if line.startswith('#') and 'scrub' in line:
+        if '/scrub/' in line:
             scrub_line_num = line_num
             break
     return scrub_line_num
