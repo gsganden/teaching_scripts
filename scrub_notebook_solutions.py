@@ -13,15 +13,6 @@ Cleans Jupyter notebooks for sharing with students:
 contains it onwards. The idea is that you will mark cell contents that
 you don't want to share with students (e.g. solution code) with the
 comment "# /scrub/".
-- Updates relative paths to assets. For instance, I put the instructor
-version of the notebook in an `instructor_notes` directory, the student
-version in the parent directory, and e.g. images that are embedded into
-the notebook into an `assets` directory. As a result, paths to assets in
-the instructor version of the notebook start with `../assets`, while
-the corresponding paths in the sturdent version need to omit the `../`.
-I run this script with `../assets` and `assets` as the last two
-command-line arguments, and it simply replace any instances of the
-former with the latter.
 """
 # coding: utf-8
 import json
@@ -33,7 +24,6 @@ def main(input_file, output_file):
         notebook = json.load(f)
     for cell in notebook['cells']:
         cell = _clear_outputs(cell)
-        cell = _update_asset_paths(cell)
         scrub_line_num = _get_scrub_comment_line_num(cell)
         if scrub_line_num is not None:
             cell = _clear_source_from_line(cell, scrub_line_num)
@@ -46,14 +36,6 @@ def _clear_outputs(cell):
         cell['execution_count'] = None
     if 'outputs' in cell:
         cell['outputs'] = []
-    return cell
-
-
-def _update_asset_paths(cell):
-    for line_num, line in enumerate(cell['source']):
-        cell['source'][line_num] = (
-            line.replace(INPUT_ASSET_DIR_RELPATH, OUTPUT_ASSET_DIR_RELPATH)
-            )
     return cell
 
 
@@ -72,6 +54,5 @@ def _clear_source_from_line(cell, line_num):
 
 
 if __name__ == '__main__':
-    INPUT_FILE, OUTPUT_FILE, INPUT_ASSET_DIR_RELPATH, OUTPUT_ASSET_DIR_RELPATH\
-        = sys.argv[1:]
+    INPUT_FILE, OUTPUT_FILE = sys.argv[1:]
     main(INPUT_FILE, OUTPUT_FILE)
