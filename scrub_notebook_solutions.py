@@ -1,5 +1,5 @@
 """
-Usage: python scrub_notebook_scrubs.py <input_file> <output_file> <input_file_asset_relpath> <output_file_asset_relpath>
+Usage: python scrub_notebook_scrubs.py <input_file> <output_file>
 
 where `input_file_asset_relpath` is the relative path from the input
 file to a directory containing assets (e.g. images) and
@@ -13,20 +13,19 @@ Cleans Jupyter notebooks for sharing with students:
 contains it onwards. The idea is that you will mark cell contents that
 you don't want to share with students (e.g. solution code) with the
 comment "# /scrub/".
-- Updates relative paths to assets. For instance, I put the instructor
+- Replace `..` with `.` to account for the fact that I put the instructor
 version of the notebook in an `instructor_notes` directory, the student
 version in the parent directory, and e.g. images that are embedded into
 the notebook into an `assets` directory. As a result, paths to assets in
 the instructor version of the notebook start with `../assets`, while
-the corresponding paths in the sturdent version need to omit the `../`.
-I run this script with `../assets` and `assets` as the last two
-command-line arguments, and it simply replace any instances of the
-former with the latter.
+the corresponding paths in the sturdent version need `./assets`.
 """
 # coding: utf-8
 import json
 import sys
 
+INPUT_ASSET_DIR_RELPATH = '..'
+OUTPUT_ASSET_DIR_RELPATH = '.'
 
 def main(input_file, output_file):
     with open(input_file, 'r') as f:
@@ -72,6 +71,5 @@ def _clear_source_from_line(cell, line_num):
 
 
 if __name__ == '__main__':
-    INPUT_FILE, OUTPUT_FILE, INPUT_ASSET_DIR_RELPATH, OUTPUT_ASSET_DIR_RELPATH\
-        = sys.argv[1:]
+    INPUT_FILE, OUTPUT_FILE = sys.argv[1:]
     main(INPUT_FILE, OUTPUT_FILE)
