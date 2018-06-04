@@ -9,7 +9,16 @@ def main(args):
     num_seconds = 60**2 * args['hours'] + 60 * args['minutes'] + args['seconds']
     for i in tqdm(range(num_seconds)):
         time.sleep(1)
-    print('\a')
+    _beep()
+
+
+def _beep():
+    for _ in range(3):
+        for _ in range(3):
+            print('\a')
+            time.sleep(.1)
+        time.sleep(.5)
+
 
 def _parse_args():
     parser = argparse.ArgumentParser()
