@@ -21,14 +21,14 @@ import sys
 INPUT_ASSET_DIR_RELPATH = '..'
 OUTPUT_ASSET_DIR_RELPATH = '.'
 
+
 def main(input_file, output_file):
     with open(input_file, 'r') as f:
         notebook = json.load(f)
     for cell in notebook['cells']:
         cell = _clear_outputs(cell)
-        scrub_line_num = _get_scrub_comment_line_num(cell)
-        if scrub_line_num is not None:
-            cell = _clear_source_from_line(cell, scrub_line_num)
+        if 'scrub' in cell['metadata'].get('tags', []):
+            cell['source'] = []
     with open(output_file, 'w') as f:
         f.write(json.dumps(notebook))
 
