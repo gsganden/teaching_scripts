@@ -46,5 +46,5 @@ def _clear_outputs(cell):
 
 
 if __name__ == '__main__':
-    input_file, output_file = sys.argv[1:]
-    main(path=input_file, path=output_file)
+    path = sys.argv[1]
+    main(path=path)
